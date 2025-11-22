@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Square B - مساعد الدردشة الذكي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E8 30%, #FFDDE5 70%, #FFE8EE 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 500px;
+            height: 88vh;
+            background: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 24px 80px rgba(255, 180, 210, 0.25), 
+                        0 12px 32px rgba(255, 150, 190, 0.15),
+                        0 0 0 1px rgba(255, 200, 220, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #FFF5F8 0%, #FFEEF5 50%, #FFE8F0 100%);
+            padding: 28px 24px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 180, 210, 0.15);
+            position: relative;
+        }
+
+        .logo-container {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container img {
+            max-width: 160px;
+            max-height: 90px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 10px rgba(233, 30, 99, 0.2));
+        }
+
+        .logo-fallback {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #E91E63, #D81B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #C2185B;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .chat-header p {
+            font-size: 14px;
+            color: #D81B60;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 28px 20px;
+            overflow-y: auto;
+            background: #FFFBFC;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 200, 220, 0.1);
+            border-radius: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 105, 180, 0.3);
+            border-radius: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 105, 180, 0.5);
+        }
+
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 15px 19px;
+            border-radius: 22px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.65;
+            font-size: 15px;
+            font-weight: 400;
+            position: relative;
+        }
+
+        .message.bot .message-content {
+            background: #FFFFFF;
+            color: #8B4570;
+            box-shadow: 0 3px 12px rgba(255, 150, 190, 0.15);
+            border: 1px solid rgba(255, 182, 193, 0.25);
+            border-radius: 22px 22px 22px 4px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #E91E63 0%, #D81B60 100%);
+            color: #FFFFFF;
+            box-shadow: 0 3px 12px rgba(233, 30, 99, 0.25);
+            border-radius: 22px 22px 4px 22px;
+            font-weight: 500;
+        }
+
+        .message-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            margin: 0 11px;
+            box-shadow: 0 3px 10px rgba(255, 105, 180, 0.2);
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-icon {
+            background: linear-gradient(135deg, #E91E63 0%, #D81B60 100%);
+            border: 2.5px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .message.user .message-icon {
+            background: linear-gradient(135deg, #F48FB1 0%, #F06292 100%);
+            border: 2.5px solid rgba(255, 255, 255, 0.95);
+        }
+
+        .chat-input-container {
+            padding: 20px 24px 24px;
+            background: #FFFFFF;
+            border-top: 1px solid rgba(255, 180, 210, 0.15);
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px 22px;
+            border: 1.5px solid rgba(255, 182, 193, 0.3);
+            border-radius: 30px;
+            font-size: 15px;
+            font-family: 'Tajawal', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #FAFAFA;
+            color: #8B4570;
+            box-shadow: 0 2px 8px rgba(255, 150, 190, 0.08);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(139, 69, 112, 0.45);
+        }
+
+        .chat-input:focus {
+            border-color: rgba(233, 30, 99, 0.5);
+            box-shadow: 0 4px 14px rgba(233, 30, 99, 0.15);
+            background: #FFFFFF;
+        }
+
+        .send-button {
+            padding: 15px 32px;
+            background: linear-gradient(135deg, #E91E63 0%, #D81B60 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(233, 30, 99, 0.25);
+            letter-spacing: 0.3px;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(233, 30, 99, 0.35);
+            background: linear-gradient(135deg, #D81B60 0%, #C2185B 100%);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(233, 30, 99, 0.15);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 14px 20px;
+            background: #FFFFFF;
+            border-radius: 22px 22px 22px 4px;
+            width: fit-content;
+            box-shadow: 0 3px 12px rgba(255, 150, 190, 0.15);
+            border: 1px solid rgba(255, 182, 193, 0.25);
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #E91E63, #D81B60);
+            margin: 0 3px;
+            animation: typing 1.4s infinite ease-in-out;
+            box-shadow: 0 2px 4px rgba(233, 30, 99, 0.25);
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-12px);
+                opacity: 1;
+            }
+        }
+
+        .quick-actions {
+            padding: 16px 20px;
+            background: #FFFFFF;
+            border-bottom: 1px solid rgba(255, 180, 210, 0.12);
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+        }
+
+        .quick-actions::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .quick-actions::-webkit-scrollbar-track {
+            background: rgba(255, 200, 220, 0.1);
+        }
+
+        .quick-actions::-webkit-scrollbar-thumb {
+            background: rgba(255, 105, 180, 0.3);
+            border-radius: 10px;
+        }
+
+        .quick-action-btn {
+            padding: 11px 20px;
+            background: #FAFAFA;
+            border: 1.5px solid rgba(255, 182, 193, 0.3);
+            border-radius: 26px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: #8B4570;
+            box-shadow: 0 2px 8px rgba(255, 150, 190, 0.1);
+            flex-shrink: 0;
+        }
+
+        .quick-action-btn:hover {
+            background: linear-gradient(135deg, #E91E63 0%, #D81B60 100%);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.25);
+        }
+
+        .quick-action-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                max-width: 100%;
+                box-shadow: none;
+            }
+
+            .chat-header {
+                padding: 24px 18px;
+                border-radius: 0;
+            }
+
+            .logo-container img {
+                max-width: 140px;
+                max-height: 75px;
+            }
+
+            .chat-messages {
+                padding: 24px 16px;
+            }
+
+            .message-content {
+                max-width: 78%;
+                font-size: 14.5px;
+                padding: 13px 17px;
+            }
+
+            .message-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 17px;
+                margin: 0 9px;
+            }
+
+            .chat-input-container {
+                padding: 18px 18px 20px;
+            }
+
+            .chat-input {
+                font-size: 15px;
+                padding: 13px 18px;
+            }
+
+            .send-button {
+                padding: 13px 24px;
+                font-size: 15px;
+            }
+
+            .quick-actions {
+                padding: 14px 16px;
+            }
+
+            .quick-action-btn {
+                padding: 10px 16px;
+                font-size: 13.5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-header h1 {
+                font-size: 20px;
+            }
+
+            .chat-header p {
+                font-size: 13px;
+            }
+
+            .logo-fallback {
+                font-size: 32px;
+            }
+
+            .logo-container img {
+                max-width: 120px;
+                max-height: 65px;
+            }
+
+            .message-content {
+                max-width: 82%;
+                font-size: 14px;
+            }
+
+            .chat-input {
+                font-size: 14px;
+                padding: 12px 16px;
+            }
+
+            .send-button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="logo-container">
+                <img src="/static/logo.png" alt="Square B Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div class="logo-fallback" style="display: none;">Square B</div>
+            </div>
+            <h1>مساعد Square B الذكي</h1>
+            <p>🍔 طلباتك بكل سهولة وراحة</p>
+        </div>
+
+        <div class="quick-actions">
+            <button class="quick-action-btn" onclick="sendQuickMessage('منيو')">📋 المنيو الكامل</button>
+            <button class="quick-action-btn" onclick="sendQuickMessage('شو بتنصحني اليوم؟')">✨ اقتراحات</button>
+            <button class="quick-action-btn" onclick="sendQuickMessage('قديش سعر برجر بيف؟')">💰 الأسعار</button>
+            <button class="quick-action-btn" onclick="sendQuickMessage('رقم التوصيل')">📞 التوصيل</button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-icon">🍔</div>
+                <div class="message-content">
+                    أهلاً وسهلاً في Square B! 👋<br><br>أنا هنا لأساعدك باختيار أفضل الأطباق والأسعار من المنيو.<br><br>جرّب تكتب:<br>• "منيو" لعرض القائمة الكاملة<br>• "شو بتنصحني اليوم؟" للاقتراحات<br>• "قديش سعر برجر بيف؟" للأسعار
+                </div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                class="chat-input" 
+                id="messageInput" 
+                placeholder="اكتب رسالتك هنا..."
+                onkeypress="handleKeyPress(event)"
+            >
+            <button class="send-button" id="sendButton" onclick="sendMessage()">
+                إرسال
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = null;
+
+        function addMessage(content, isUser) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const icon = document.createElement('div');
+            icon.className = 'message-icon';
+            icon.textContent = isUser ? '👤' : '🍔';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = content;
+            
+            if (isUser) {
+                messageDiv.appendChild(contentDiv);
+                messageDiv.appendChild(icon);
+            } else {
+                messageDiv.appendChild(icon);
+                messageDiv.appendChild(contentDiv);
+            }
+            
+            messagesContainer.insertBefore(messageDiv, document.getElementById('typingIndicator'));
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').style.display = 'block';
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Disable input and button
+            input.disabled = true;
+            document.getElementById('sendButton').disabled = true;
+            
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: sessionId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Save session ID
+                sessionId = data.session_id;
+                
+                // Hide typing and show response
+                hideTyping();
+                addMessage(data.response, false);
+                
+            } catch (error) {
+                hideTyping();
+                addMessage('عذراً، حدث خطأ في الاتصال. الرجاء المحاولة مرة أخرى.', false);
+                console.error('Error:', error);
+            } finally {
+                // Re-enable input and button
+                input.disabled = false;
+                document.getElementById('sendButton').disabled = false;
+                input.focus();
+            }
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Focus input on load
+        window.onload = () => {
+            document.getElementById('messageInput').focus();
+        };
+    </script>
+</body>
+</html>
