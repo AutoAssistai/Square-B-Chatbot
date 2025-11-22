@@ -1,0 +1,173 @@
+/* Light Theme for Square B Arabic Chatbot Demo */
+:root {
+  --bg: #FFE4E1;           /* زهري فاتح */
+  --panel: #ffffff;        /* أبيض للصناديق */
+  --bot: #f4a3b1;          /* زهري غامق قليلاً لرسائل البوت */
+  --user: #f2f2f2;         /* رمادي فاتح لرسائل العميل */
+  --text: #333333;
+  --border: #ffd2d0;
+  --accent: #e57485;       /* وردي/أحمر خفيف للعناصر البارزة */
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.header .cart, header .cart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff7f9;
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 12px;
+}
+#cart-badge {
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 44px; height: 44px; border-radius: 12px; background: var(--accent);
+  display: grid; place-items: center; color: #fff; font-weight: 700;
+}
+.titles h1 { margin: 0; font-size: 1.4rem; }
+.titles p { margin: 2px 0 0; color: #555; font-size: .95rem; }
+
+main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+.chat-panel, .menu-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.menu-panel h2 {
+  margin: 4px 0 12px;
+  font-size: 1.1rem;
+}
+
+.menu-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.menu-item {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 8px;
+  background: #fff7f7;
+}
+.menu-color { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-left: 6px; border: 1px solid #ccc; }
+
+.messages {
+  height: 58vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px;
+  scroll-behavior: smooth;
+}
+
+.message { display: flex; }
+.message .bubble {
+  padding: 10px 12px;
+  border-radius: 14px;
+  max-width: 85%;
+  line-height: 1.6;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.message.bot { justify-content: flex-start; }
+.message.bot .bubble { background: var(--bot); color: #222; border-top-left-radius: 4px; }
+.message.user { justify-content: flex-end; }
+.message.user .bubble { background: var(--user); color: #111; border-top-right-radius: 4px; }
+
+/* Suggestions cards under bot replies */
+.suggestions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+}
+.suggestions .card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+}
+.suggestions .card img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #fff0f0;
+}
+.suggestions .card .title { font-weight: 600; }
+.suggestions .card .price { color: #444; font-size: .95rem; }
+.suggestions .card .add {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 10px;
+}
+.input-row input {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+}
+.input-row .send-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0 18px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.input-row .send-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+footer { margin-top: 10px; color: #555; text-align: center; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; }
+  .messages { height: 52vh; }
+}
