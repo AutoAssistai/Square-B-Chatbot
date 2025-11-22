@@ -18,15 +18,20 @@ class ChatService:
     def __init__(self, menu_service: MenuService):
         self.menu_service = menu_service
         
-        # Load API configuration
-        self.api_key = os.getenv("OPENAI_API_KEY") or os.getenv("API_KEY")
-        self.model = os.getenv("OPENAI_MODEL") or os.getenv("MODEL", "gpt-4")
+        # Load API configuration from environment variables
+        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.model = os.getenv("MODEL", "gpt-3.5-turbo")
         self.api_base_url = os.getenv("API_BASE_URL")
+        
+        if not self.api_key:
+            logger.error("OPENAI_API_KEY environment variable is not set!")
+            raise ValueError("OPENAI_API_KEY environment variable is required")
         
         # Initialize OpenAI client
         client_kwargs = {"api_key": self.api_key}
         if self.api_base_url:
             client_kwargs["base_url"] = self.api_base_url
+            logger.info(f"Using custom API base URL: {self.api_base_url}")
         
         self.client = AsyncOpenAI(**client_kwargs)
         

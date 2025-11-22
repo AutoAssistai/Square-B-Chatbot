@@ -1,0 +1,126 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                                                                       ║
+║          🐳 Docker Deployment - Square B Chatbot 🐳                  ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+✅ تم إعداد Docker بالكامل وجاهز للاستخدام!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 الملفات المنشأة:
+
+   ✅ docker-compose.yml
+   ✅ Dockerfile
+   ✅ .dockerignore
+   ✅ .env.example
+   ✅ DOCKER_GUIDE.md
+   ✅ requirements.txt (محدّث)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 التعديلات على الكود:
+
+   ✅ services/chat_service.py:
+      - يقرأ OPENAI_API_KEY من البيئة
+      - يقرأ API_BASE_URL و MODEL من البيئة
+      - validation للـ API key
+      - لا توجد مفاتيح مكتوبة في الكود
+
+   ✅ main.py:
+      - يقرأ PORT من البيئة (default: 8080)
+      - reload=False في الإنتاج
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 كيفية التشغيل:
+
+   1️⃣  مع OpenAI:
+       
+       OPENAI_API_KEY="sk-your-key" docker compose up --build -d
+
+   2️⃣  مع OpenRouter:
+       
+       OPENAI_API_KEY="sk-or-v1-your-key" \
+       API_BASE_URL="https://openrouter.ai/api/v1" \
+       MODEL="openai/gpt-3.5-turbo" \
+       docker compose up --build -d
+
+   3️⃣  مع منفذ مخصص:
+       
+       OPENAI_API_KEY="your-key" \
+       PORT=8080 \
+       docker compose up --build -d
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 متغيرات البيئة:
+
+   المطلوبة:
+   • OPENAI_API_KEY (إلزامي)
+
+   الاختيارية:
+   • API_BASE_URL (للـ OpenRouter)
+   • MODEL (default: gpt-3.5-turbo)
+   • PORT (default: 8080)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 الأوامر المفيدة:
+
+   عرض السجلات:
+   $ docker compose logs -f
+
+   إيقاف:
+   $ docker compose down
+
+   إعادة التشغيل:
+   $ docker compose restart
+
+   الحالة:
+   $ docker compose ps
+
+   دخول الـ container:
+   $ docker compose exec app bash
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🌐 الوصول:
+
+   • التطبيق: http://localhost:8080
+   • API Docs: http://localhost:8080/docs
+   • Health Check: http://localhost:8080/health
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔒 الأمان:
+
+   ✅ لا توجد مفاتيح API في الملفات
+   ✅ جميع المفاتيح من متغيرات البيئة
+   ✅ .env في .gitignore
+   ✅ .dockerignore يستبعد الملفات الحساسة
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 ميزات Docker:
+
+   ✅ Python 3.11-slim (صورة خفيفة)
+   ✅ Multi-stage build (تحسين الحجم)
+   ✅ Health check تلقائي
+   ✅ Logs mounted على host
+   ✅ MENU.txt read-only mount
+   ✅ Restart unless-stopped
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ جاهز للإنتاج!
+
+   المشروع الآن:
+   ✅ يعمل في Docker
+   ✅ آمن (لا مفاتيح في الملفات)
+   ✅ سهل النشر
+   ✅ قابل للتوسع
+   ✅ موثق بالكامل
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
